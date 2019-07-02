@@ -1,0 +1,72 @@
+<html ng-app="studentapp">
+<head>
+<script src="~/Scripts/angular.js"></script>
+</head>
+<body ng-controller="myController">
+<h1>STUDNENT FORM</h1>
+<form name="submitform" ng-submit="submitform()" >
+<label for="first name">First Nmae</label>
+</br>
+ <input type="text" id="first name"ng-module="student.firstname" required="true"/>
+             <span ng-show="submitform.firstName.$touched && submitform.firstName.$error.required"></span>
+</br>
+<label for="lastName">Last Name</label><br />
+  <input type="text" id="lastName" ng-model="student.lastName" ng-maxlength="10" ng-minlength="3" /> <br />
+       <span ng-show="submitform.lastName.$touched && submitform.lastName.$error.minlength">min 3 chars.</span>
+            <span ng-show="submitform.lastName.$touched && submitform.lastName.$error.maxlength">Max 10 chars.</span>
+
+
+ <label for="dob" >DoB</label><br />
+    <input type="date" id="dob" ng-model="student.DoB" /> <br /><br />
+
+<label for="gender" >Gender</label> <br />
+                <select id="gender" ng-model="student.gender">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select><br /> <br />
+
+ <span>Training Type:</span><br />
+                    <label><input value="online" type="radio" name="training" ng-model="student.trainingType" />Online</label><br />
+                    <label><input value="onsite" type="radio" name="training" ng-model="student.trainingType" />OnSite</label> <br /><br />
+
+  <span>Subjects</span><br />
+                    <label><input type="checkbox" ng-model="student.maths" />Maths</label> <br />
+                    <label><input type="checkbox" ng-model="student.physics" />Physics</label> <br />
+                    <label><input type="checkbox"  ng-model="student.chemistry" />Chemistry</label><br /><br />
+                     <input type="submit" value="Submit" />
+        <input type="reset" ng-click="resetForm()" value="Reset" />
+    </form>
+<script>
+	var student=angular.module('studentapp',[])
+        student.controller("myController",function($scope,$http){
+            $scope.studentname={firstName: 'James',
+                lastName: 'Bond',
+                DoB: new Date('01/31/1980'),
+                gender: 'male',
+                trainingType: 'online',
+                maths: false,
+                physics: true,
+                chemistry: true
+            };
+        $scope.student=angular.copy($scope.student);
+        $scope.submitform=function();
+        {
+
+        	var onsucess=function(data,status,header,config)
+        	{
+        		alert('student saved successfully');
+        	};
+        	 var onError = function (data, status, headers, config) {
+                    alert('Error occured.');
+                    }
+$http.post('/student/submitData',{student:$scope.student}).success(onsucess).error(onError);
+};
+
+  $scope.resetForm = function () {
+                $scope.student = angular.copy($scope.OriginalStudent);
+            };
+ });
+    </script>
+
+    </body>
+    </html>
